@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block heading %}Demonstração de Server-Side Template Injection (SSTI){% endblock %}
+
+{% block content %}
+    <div>
+        <h2>O que é SSTI?</h2>
+        <p>Server-Side Template Injection (SSTI) é uma vulnerabilidade que ocorre quando um atacante consegue injetar código malicioso em um template que é posteriormente processado pelo servidor. As engines de template como Jinja2 (usada pelo Flask) permitem a execução de lógica dentro dos templates, e essa característica pode ser explorada para executar código arbitrário no servidor.</p>
+        
+        <h2>Exemplos nesta demonstração</h2>
+        <ul>
+            <li><a href="{{ url_for('user_profile', username='exemplo') }}">Exemplo básico de template</a> - Demonstração segura de um template simples com um nome de usuário.</li>
+            <li><a href="{{ url_for('users_list') }}">Exemplo de FOR e IF</a> - Demonstração de loops e condicionais em templates.</li>
+            <li><a href="{{ url_for('vulnerable') }}?name=Visitante">Exemplo vulnerável a SSTI</a> - Uma implementação vulnerável que permite injeção de template.</li>
+            <li><a href="{{ url_for('safe') }}?name=Visitante">Exemplo seguro</a> - A implementação correta do exemplo anterior.</li>
+            <li><a href="{{ url_for('render_user_template') }}">Renderização de template do usuário</a> - Um exemplo extremamente vulnerável que permite que o usuário especifique um template completo.</li>
+        </ul>
+        
+        <h2>Payloads de teste para SSTI</h2>
+        <p>Você pode testar a vulnerabilidade no <a href="{{ url_for('vulnerable') }}">exemplo vulnerável</a> usando os seguintes payloads na URL:</p>
+        
+        <div class="code-block">
+            {% raw %}
+            # Teste básico para detectar SSTI<br>
+            ?name={{7*7}}<br><br>
+            
+            # Acessar configurações do Flask<br>
+            ?name={{config}}<br><br>
+            
+            # Listar classes disponíveis<br>
+            ?name={{self.__class__.__mro__}}<br><br>
+            
+            # Acesso a variáveis de ambiente<br>
+            ?name={{config.items()}}<br><br>
+            
+            # Execução de código (tentativa de ler um arquivo)<br>
+            ?name={{''.__class__.__mro__[1].__subclasses__()}}
+            {% endraw %}
+        </div>
+        
+        <h2>Mitigação</h2>
+        <p>Para prevenir SSTI:</p>
+        <ul>
+            <li>Nunca use inputs do usuário para construir templates dinamicamente</li>
+            <li>Sempre passe dados do usuário como variáveis de contexto para o template, e trate o input</li>
+            <li>Use ambientes sandbox quando disponíveis</li>
+            <li>Implemente validação rigorosa de input</li>
+            <li>Siga o princípio do menor privilégio para sua aplicação web</li>
+        </ul>
+    </div>
+{% endblock %}

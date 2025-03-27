@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Usuários{% endblock %}
+
+{% block heading %}Lista de Usuários{% endblock %}
+
+{% block content %}
+    <div>
+        <p>Este exemplo demonstra o uso de loops (FOR) e condicionais (IF) em templates.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    {% if user.is_admin %}
+                        <tr class="admin">
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>Administrador</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>Usuário Regular</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="code-block">
+            <p>Código do template:</p>
+<pre>&#123;% for user in users %&#125;
+    &#123;% if user.is_admin %&#125;
+        &lt;tr class="admin"&gt;
+            &lt;td&gt;&#123;&#123; user.name &#125;&#125;&lt;/td&gt;
+            &lt;td&gt;&#123;&#123; user.email &#125;&#125;&lt;/td&gt;
+            &lt;td&gt;Administrador&lt;/td&gt;
+        &lt;/tr&gt;
+    &#123;% else %&#125;
+        &lt;tr&gt;
+            &lt;td&gt;&#123;&#123; user.name &#125;&#125;&lt;/td&gt;
+            &lt;td&gt;&#123;&#123; user.email &#125;&#125;&lt;/td&gt;
+            &lt;td&gt;Usuário Regular&lt;/td&gt;
+        &lt;/tr&gt;
+    &#123;% endif %&#125;
+&#123;% endfor %&#125;</pre>
+        </div>
+        
+        <div class="safe-box">
+            <h3>Este exemplo é seguro?</h3>
+            <p><strong>Sim!</strong> Este exemplo é seguro porque:</p>
+            <ul>
+                <li>A estrutura do template é fixa</li>
+                <li>Os dados são passados como variáveis de contexto</li>
+                <li>Os loops e condicionais são parte controlada da sintaxe do template</li>
+                <li>Nenhuma entrada do usuário é incorporada na estrutura do template</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

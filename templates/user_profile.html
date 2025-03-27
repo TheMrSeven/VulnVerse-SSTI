@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de {{ username }}{% endblock %}
+
+{% block heading %}Perfil de Usuário{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Olá, {{ username }}!</h2>
+        <p>Este é um exemplo simples de uso de template com um valor dinâmico (nome de usuário).</p>
+        <p>O usuário é enviado pelo parâmetro da URL: /user/USUÁRIO</p>
+        
+        <div class="code-block">
+            <p>Código do template:</p>
+            {% raw %}
+            &lt;h2&gt;Olá, {{ username }}!&lt;/h2&gt;
+            {% endraw %}
+        </div>
+        
+        <div class="safe-box">
+            <h3>Este exemplo é seguro?</h3>
+            <p><strong>Sim!</strong> Este é um exemplo seguro de uso de templates porque:</p>
+            <ul>
+                <li>A estrutura do template é fixa</li>
+                <li>O valor dinâmico (username) é passado como variável de contexto</li>
+                <li>O usuário não pode controlar a estrutura do template, apenas o valor que é inserido nele</li>
+            </ul>
+        </div>
+        
+        <p>Experimente mudar o valor na URL para ver o resultado:</p>
+        <ul>
+            <li><a href="{{ url_for('user_profile', username='Maria') }}">Maria</a></li>
+            <li><a href="{{ url_for('user_profile', username='João') }}">João</a></li>
+            <li><a href="{{ url_for('user_profile', username='{{7*7}}') }}">Teste SSTI: {% raw %}{{7*7}}{% endraw %}</a></li>
+        </ul>
+        <p>Note que mesmo tentando injetar uma expressão como {% raw %}{{7*7}}{% endraw %}, o template não a avalia porque o valor é tratado como dados, não como código.</p>
+    </div>
+{% endblock %}

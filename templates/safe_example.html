@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Exemplo Seguro{% endblock %}
+
+{% block heading %}Demonstração de SSTI - Exemplo Seguro{% endblock %}
+
+{% block content %}
+    <div class="safe-box">
+        <h3>Área Segura</h3>
+        <p>Olá, {{ name }}!</p>
+        <p><small>Este é um exemplo seguro!</small></p>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h3>Por que isso é seguro?</h3>
+        <p>Esta implementação é segura porque:</p>
+        <ul>
+            <li>O template é fixo e predefinido</li>
+            <li>A entrada do usuário é passada como variável de contexto</li>
+            <li>O usuário não pode influenciar a estrutura do template</li>
+        </ul>
+        
+        <div class="code-block">
+            # Código seguro:<br>
+            return render_template('safe_example.html', name=name)
+            <br>
+            # Template fixo com variável contextual:<br>
+            {% raw %}
+            &lt;p&gt;Olá, {{ name }}!&lt;/p&gt;
+            {% endraw %}
+        </div>
+        
+        <p>Experimente usar os seguintes valores:</p>
+        <ul>
+            <li><a href="?name=Maria">?name=Maria</a> - Valor normal</li>
+            <li><a href="?name=%7B%7B7*7%7D%7D">?name={{"{{"}}7*7{{"}}"}}</a> - Tentativa de injeção</li>
+            <li><a href="?name=%7B%7Bconfig%7D%7D">?name={{"{{"}}config{{"}}"}}</a> - Tentativa de acesso a objetos</li>
+        </ul>
+        <p>Note que mesmo tentando injetar expressões como {% raw %}{{7*7}}{% endraw %}, o sistema não as avalia porque são tratadas como simples strings.</p>
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <h3>Compare com o exemplo<a href="{{ url_for('vulnerable') }}?name=Visitante"> vulnerável</a></h3>
+        <p>A diferença fundamental entre o exemplo seguro e o vulnerável está em como o template é construído:</p>
+        <ul>
+            <li><strong>Seguro:</strong> Template fixo + Dados dinâmicos</li>
+            <li><strong>Vulnerável:</strong> Template dinâmico construído com string formatting</li>
+        </ul>
+    </div>
+{% endblock %}

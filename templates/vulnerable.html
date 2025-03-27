@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Template Customizado{% endblock %}
+
+{% block heading %}Renderização de Template Customizado{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Demonstração EXTREMAMENTE Vulnerável</h2>
+        <p>Esta página permite que você forneça seu próprio template Jinja2 para ser renderizado pelo servidor.</p>
+        <p class="highlight">Aviso: Esta funcionalidade é EXTREMAMENTE vulnerável e nunca deve ser implementada em um ambiente real. É demonstrada aqui apenas para fins educacionais.</p>
+        
+        <form action="{{ url_for('render_user_template') }}" method="get">
+            <div>
+                <label for="template">Seu Template:</label><br>
+                <textarea id="template" name="template" rows="10" style="width: 100%; font-family: monospace;">{% if request.args.get('template') %}{{ request.args.get('template') }}{% else %}<!-- Insira seu template aqui -->
+<h3>Exemplo de Template</h3>
+<p>Olá, mundo!</p>
+
+<!-- Você pode usar loops e condicionais -->
+<ul>
+{% for user in users %}
+    <li>{{ user.name }} - {{ user.email }}</li>
+{% endfor %}
+</ul>{% endif %}</textarea>
+            </div>
+            <div style="margin-top: 15px;">
+                <button type="submit">Renderizar Template</button>
+            </div>
+        </form>
+        
+        {% if result %}
+            <h3>Resultado:</h3>
+            <div style="border: 1px solid #ccc; padding: 15px; margin-top: 15px;">
+                {{ result|safe }}
+            </div>
+        {% endif %}
+        
+        <div class="vulnerable-box" style="margin-top: 20px;">
+            <h3>Por que isso é EXTREMAMENTE perigoso?</h3>
+            <p>Permitir que um usuário forneça templates arbitrários para serem renderizados é extremamente perigoso porque:</p>
+            <ul>
+                <li>O usuário tem controle completo sobre a lógica do template</li>
+                <li>Pode-se acessar objetos internos do Python usando introspection</li>
+                <li>Isso pode levar à execução remota de código e comprometimento total do servidor</li>
+            </ul>
+            <p>Você pode testar com payloads como:</p>
+            <div class="code-block">
+                {% raw %}
+                    {{7*7}}<br><br>
+                    {{config}}<br><br>
+                    {{self.__class__.__mro__}}<br><br>
+                    {{''.__class__.__mro__[1].__subclasses__()}}
+                {% endraw %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
